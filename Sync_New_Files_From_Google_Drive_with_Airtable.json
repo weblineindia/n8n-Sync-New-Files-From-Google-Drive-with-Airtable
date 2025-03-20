@@ -1,0 +1,284 @@
+{
+  "name": "Sync New Files From Google Drive with Airtable",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "user",
+            "emailAddress": "yashkumarnpatil01@gmail.com"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        660,
+        -20
+      ],
+      "id": "f648b663-8adb-4587-bf80-cff7554b72c4",
+      "name": "Share File with Recipient",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Y4WZTtvFJb942Lbx",
+          "name": "SM MaryP (Google Drive)"
+        }
+      },
+      "notes": "Share File via Email"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNiCFgbxVO4KBSj",
+          "mode": "list",
+          "cachedResultName": "GDriveData",
+          "cachedResultUrl": "https://airtable.com/appNiCFgbxVO4KBSj"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblkAnaPswTU2OWSN",
+          "mode": "list",
+          "cachedResultName": "DriveUpdatedData",
+          "cachedResultUrl": "https://airtable.com/appNiCFgbxVO4KBSj/tblkAnaPswTU2OWSN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "FileName": "={{ $('Google Drive').item.json.name }}",
+            "FileId": "={{ $('Google Drive').item.json.id }}",
+            "sentId": "={{ $json.id }}",
+            "CreatedTime": "={{ $('Google Drive').item.json.createdTime }}",
+            "ModifiedTime": "={{ $('Google Drive').item.json.modifiedTime }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FileName",
+              "displayName": "FileName",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "FileId",
+              "displayName": "FileId",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "CreatedTime",
+              "displayName": "CreatedTime",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ModifiedTime",
+              "displayName": "ModifiedTime",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sentId",
+              "displayName": "sentId",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        940,
+        -160
+      ],
+      "id": "29c9dacf-e9fa-49b7-81e5-0416dbdbc9ba",
+      "name": " Log File Metadata",
+      "notesInFlow": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "BFvEs1IgHCKiBYeX",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "notes": "Store File Metadata"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "serviceAccount",
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1H8Xe2uIO0sI-QdxFsDH0Yg_w9RaPOoD_",
+          "mode": "list",
+          "cachedResultName": "yashdata",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1H8Xe2uIO0sI-QdxFsDH0Yg_w9RaPOoD_"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -180
+      ],
+      "id": "f2a4c6af-cf00-4549-88af-1a3e125508d6",
+      "name": "Google Drive",
+      "notesInFlow": true,
+      "notes": "Fetch New File"
+    },
+    {
+      "parameters": {
+        "content": "This node retrieves the newly added file from the specified folder in Google Drive.",
+        "height": 140,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -20
+      ],
+      "typeVersion": 1,
+      "id": "14da3a1a-def0-4718-8456-f3f11c0fb238",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "This node sends the fetched file via email to the specified recipient.",
+        "height": 140,
+        "width": 170
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "d9224406-31e5-46a6-a2da-56effb86c8eb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "This node stores the file’s metadata (name, ID, creation time, modification time, and recipient email) in Airtable.",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        920,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "cad9869a-cf58-4786-8d0a-d696bf3a0c84",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Automatic File Upload & Sharing Workflow with Google Drive & Airtable Integration\n\n",
+        "height": 420,
+        "width": 860
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "0f6c1ffc-7d9e-41ee-b5f4-ee65f792222e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Description:\nThis workflow automatically fetches newly uploaded files from a specific folder in Google Drive, shares them via email with specified recipients, and logs the file details (name, ID, created time, modified time) into Airtable for easy tracking. It streamlines the process of file sharing and management while keeping track of important metadata in a central place.)",
+        "height": 120,
+        "width": 860
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        220
+      ],
+      "id": "99acf1d1-ce4e-4942-bb6c-d053ef886a29",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Share File with Recipient": {
+      "main": [
+        [
+          {
+            "node": " Log File Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Share File with Recipient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "871f6a72-eb3d-4439-ad04-22ea637fcc23",
+  "meta": {
+    "instanceId": "14e4c77104722ab186539dfea5182e419aecc83d85963fe13f6de862c875ebfa"
+  },
+  "id": "uLHpFu2ndN6ZKClZ",
+  "tags": []
+}
